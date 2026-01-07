@@ -11,21 +11,26 @@ interface ResultPageProps {
 const ResultPage: React.FC<ResultPageProps> = ({ answers, onContinue }) => {
   const generateWaLink = (withAnswers: boolean) => {
     if (!withAnswers) return WHATSAPP_URL;
-    const text = encodeURIComponent(`Olá Dra. Isadora! Finalizei meu quiz de avaliação e gostaria de conversar sobre meu caso. Aqui estão minhas respostas:\n\n` + 
-      answers.map(a => `*${a.question}*\nR: ${a.answer}`).join('\n\n'));
     
-    // Removemos qualquer parâmetro "text" vazio pré-existente e adicionamos o novo de forma robusta
-    const url = new URL(WHATSAPP_URL);
-    url.searchParams.set('text', `Olá Dra. Isadora! Finalizei meu quiz de avaliação e gostaria de conversar sobre meu caso. Aqui estão minhas respostas:\n\n` + 
-      answers.map(a => `${a.question}: ${a.answer}`).join('\n\n'));
+    const introText = "Olá Dra. Isadora! Finalizei meu quiz de avaliação e gostaria de conversar sobre meu caso. Aqui estão minhas respostas:\n\n";
+    const answersText = answers.map(a => `*${a.question}*\nR: ${a.answer}`).join('\n\n');
+    const fullText = encodeURIComponent(introText + answersText);
     
-    return url.toString();
+    // Tenta usar a API de URL para segurança, caso falhe, concatena manualmente
+    try {
+      const url = new URL(WHATSAPP_URL);
+      url.searchParams.set('text', introText + answersText);
+      return url.toString();
+    } catch (e) {
+      // Fallback robusto para concatenação manual se a URL base for complexa
+      return `${WHATSAPP_URL}&text=${fullText}`;
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-[130] bg-black flex flex-col overflow-y-auto">
+    <div className="fixed inset-0 z-[130] bg-black flex flex-col overflow-y-auto animate-[fadeIn_0.5s_ease-out]">
       {/* Background Glow suave para profundidade */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[40vh] bg-gold-900/10 blur-[100px] rounded-full"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[40vh] bg-gold-900/10 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="flex-1 w-full max-w-md mx-auto relative px-6 py-6 flex flex-col items-center justify-center text-center">
         
@@ -42,7 +47,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ answers, onContinue }) => {
            </div>
            
            {/* Check Icon Compacto */}
-           <div className="absolute -bottom-3 bg-gold-500 w-10 h-10 rounded-full border-[3px] border-black flex items-center justify-center text-black shadow-lg">
+           <div className="absolute -bottom-3 bg-gold-500 w-10 h-10 rounded-full border-[3px] border-black flex items-center justify-center text-black shadow-lg z-20">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
               </svg>
@@ -65,7 +70,7 @@ const ResultPage: React.FC<ResultPageProps> = ({ answers, onContinue }) => {
             href={generateWaLink(true)}
             target="_blank"
             rel="noopener noreferrer"
-            className="relative z-[160] pointer-events-auto flex items-center justify-center w-full py-4 px-6 gold-gradient text-black rounded-xl font-black shadow-[0_8px_20px_rgba(212,175,55,0.2)] btn-pulse active:scale-95 transition-all text-[11px] uppercase tracking-widest cursor-pointer no-underline text-center"
+            className="relative z-[160] pointer-events-auto flex items-center justify-center w-full py-4 px-6 gold-gradient text-black rounded-xl font-black shadow-[0_8px_20px_rgba(212,175,55,0.3)] btn-pulse active:scale-95 transition-all text-[11px] uppercase tracking-widest cursor-pointer no-underline text-center"
           >
             1. Enviar minha avaliação à Dra.
           </a>
