@@ -13,7 +13,13 @@ const ResultPage: React.FC<ResultPageProps> = ({ answers, onContinue }) => {
     if (!withAnswers) return WHATSAPP_URL;
     const text = encodeURIComponent(`Olá Dra. Isadora! Finalizei meu quiz de avaliação e gostaria de conversar sobre meu caso. Aqui estão minhas respostas:\n\n` + 
       answers.map(a => `*${a.question}*\nR: ${a.answer}`).join('\n\n'));
-    return `https://api.whatsapp.com/send/?phone=5579991539962&text=${text}`;
+    
+    // Removemos qualquer parâmetro "text" vazio pré-existente e adicionamos o novo de forma robusta
+    const url = new URL(WHATSAPP_URL);
+    url.searchParams.set('text', `Olá Dra. Isadora! Finalizei meu quiz de avaliação e gostaria de conversar sobre meu caso. Aqui estão minhas respostas:\n\n` + 
+      answers.map(a => `${a.question}: ${a.answer}`).join('\n\n'));
+    
+    return url.toString();
   };
 
   return (
@@ -54,12 +60,12 @@ const ResultPage: React.FC<ResultPageProps> = ({ answers, onContinue }) => {
         </div>
 
         {/* Buttons Group Compacto */}
-        <div className="w-full space-y-2.5">
+        <div className="w-full space-y-2.5 relative z-[150]">
           <a 
             href={generateWaLink(true)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-full py-4 px-6 gold-gradient text-black rounded-xl font-black shadow-[0_8px_20px_rgba(212,175,55,0.2)] btn-pulse active:scale-95 transition-all text-[11px] uppercase tracking-widest"
+            className="relative z-[160] pointer-events-auto flex items-center justify-center w-full py-4 px-6 gold-gradient text-black rounded-xl font-black shadow-[0_8px_20px_rgba(212,175,55,0.2)] btn-pulse active:scale-95 transition-all text-[11px] uppercase tracking-widest cursor-pointer no-underline text-center"
           >
             1. Enviar minha avaliação à Dra.
           </a>
@@ -68,14 +74,14 @@ const ResultPage: React.FC<ResultPageProps> = ({ answers, onContinue }) => {
             href={generateWaLink(false)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-full py-3.5 px-6 bg-white/5 border border-white/10 text-white rounded-xl font-bold active:scale-95 transition-all text-[11px] uppercase tracking-widest"
+            className="relative z-[160] pointer-events-auto flex items-center justify-center w-full py-3.5 px-6 bg-white/5 border border-white/10 text-white rounded-xl font-bold active:scale-95 transition-all text-[11px] uppercase tracking-widest cursor-pointer no-underline text-center"
           >
             2. Chamar no WhatsApp agora
           </a>
 
           <button 
             onClick={onContinue}
-            className="text-[9px] text-gray-500 hover:text-gray-300 uppercase tracking-[0.2em] font-bold py-2 transition-colors w-full"
+            className="relative z-[160] pointer-events-auto text-[9px] text-gray-500 hover:text-gray-300 uppercase tracking-[0.2em] font-bold py-2 transition-colors w-full cursor-pointer"
           >
             3. Continuar no site
           </button>
