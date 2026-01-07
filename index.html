@@ -17,7 +17,7 @@
                 200: '#ecda91',
                 300: '#e1c254',
                 400: '#d7aa28',
-                500: '#d4af37', // Official Gold
+                500: '#d4af37',
                 600: '#b08d26',
                 700: '#8a6b20',
                 800: '#70571f',
@@ -38,7 +38,6 @@
       .font-playfair { font-family: 'Playfair Display', serif; }
       .font-signature { font-family: 'Dancing Script', cursive; }
       
-      /* Custom Animations */
       @keyframes float {
         0% { transform: translateY(0px); }
         50% { transform: translateY(-10px); }
@@ -64,17 +63,20 @@
       ::-webkit-scrollbar-track { background: #000; }
       ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
     </style>
-  <script type="importmap">
+<script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "vite": "https://esm.sh/vite@^7.3.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2"
   }
 }
 </script>
 </head>
   <body>
     <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
